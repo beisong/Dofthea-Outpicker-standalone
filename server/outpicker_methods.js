@@ -7,6 +7,24 @@ const fs = require('fs');
 
 const curDIR = process.env.PWD;
 
+const first_phase_ban_start = 0;
+const first_phase_ban_end = 5;
+
+const first_phase_pick_start = 6;
+const first_phase_pick_end = 9;
+
+const second_phase_ban_start = 10;
+const second_phase_ban_end = 13;
+
+const second_phase_pick_start = 14;
+const second_phase_pick_end = 17;
+
+const last_phase_ban_start = 18;
+const last_phase_ban_end = 19;
+
+const last_phase_pick_start = 20;
+const last_phase_pick_end = 21;
+
 Meteor.methods({
     initHeroes: function () {
         var result = HTTP.call("GET",
@@ -42,9 +60,10 @@ Meteor.methods({
         }
         console.log("BP Init");
     },
+
     insertMatchBP2: function (matchid) {
         this.unblock();
-
+        
         var results = HTTP.call("GET", "https://api.opendota.com/api/matches/" + matchid);
         var matchdata = results.data;
 
@@ -53,20 +72,32 @@ Meteor.methods({
             for (var i = 0; i < bp_arr.length; i++) {    //Loop thru BP
                 if (bp_arr[i].is_pick) {                 //if is pick
                     var thisteam = bp_arr[i].team;
+
+                    if(bp_arr[i].order > second_phase_ban_end){                     // if last 3 pick
+                        for (var k = i-1; k >= second_phase_ban_start; k--) {       // if heroes ban before picking -> is counter
+                            if(!bp_arr[k].is_pick){
+                                BanPick.update(
+                                  {hero: bp_arr[i].hero_id, counter: bp_arr[k].hero_id},
+                                  {'$inc': {"count": 1}}
+                                );
+                            }
+                        }
+                    }
+
                     for (var j = i + 1; j < bp_arr.length; j++) {
                         if (bp_arr[j].team == thisteam) {   // if same team, check ban
                             if (!bp_arr[j].is_pick) {
                                 BanPick.update(
-                                    {hero: bp_arr[i].hero_id, counter: bp_arr[j].hero_id},
-                                    {'$inc': {"count": 1}}
+                                  {hero: bp_arr[i].hero_id, counter: bp_arr[j].hero_id},
+                                  {'$inc': {"count": 1}}
                                 );
                             }
                         }
                         else {                              // if diff team, check pick: add to counter
                             if (bp_arr[j].is_pick) {
                                 BanPick.update(
-                                    {hero: bp_arr[i].hero_id, counter: bp_arr[j].hero_id},
-                                    {'$inc': {"count": 1}}
+                                  {hero: bp_arr[i].hero_id, counter: bp_arr[j].hero_id},
+                                  {'$inc': {"count": 1}}
                                 );
                             }
                         }
@@ -200,6 +231,7 @@ Meteor.methods({
             {$limit: 32}
         ];
         const results = Promise.await(BanPick.aggregate(pipeline2).toArray());
+        console.log(results);
         return results;
     },
     getPickcount: function (heroid) {
