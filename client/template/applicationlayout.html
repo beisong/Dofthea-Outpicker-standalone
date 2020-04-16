@@ -1,0 +1,20 @@
+<template name="ApplicationLayout">
+    <head>
+        <title>DoftheA</title>
+        <meta name="author" content="BeiSoNg">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    </head>
+
+    <div>
+        {{> navbar}}
+    </div>
+
+    <div class="container">
+        {{> yield region="body"}}
+    </div>
+
+    <footer class="footer">
+        {{> footer}}
+    </footer>
+</template>

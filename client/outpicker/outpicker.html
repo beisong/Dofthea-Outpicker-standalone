@@ -1,0 +1,43 @@
+<template name="outpicker">
+
+    <div class="jumbotron">
+        <h1>Outpicker</h1>
+        <p>Outdraft your opponents using pickban stats from thousands of pro games</p>
+    </div>
+
+    <h3 style="text-align: center;">Str</h3>
+    <div class="outpick_container">
+        {{#each strheroes}}
+            <figure>
+                <a href="outpicker/{{this.id}}">
+                    <img src="http://cdn.dota2.com/apps/dota2/images/heroes/{{this.cdn_name}}_full.png"/>
+                </a>
+                <figcaption>{{getHeroesName this.id}}</figcaption>
+            </figure>
+
+        {{/each}}
+    </div>
+    <h3 style="text-align: center;">Agi</h3>
+    <div class="outpick_container">
+        {{#each agiheroes}}
+            <figure>
+                <a href="outpicker/{{this.id}}">
+                    <img src="http://cdn.dota2.com/apps/dota2/images/heroes/{{this.cdn_name}}_full.png"/>
+                </a>
+                <figcaption>{{getHeroesName this.id}}</figcaption>
+            </figure>
+        {{/each}}
+    </div>
+    <h3 style="text-align: center;">Int</h3>
+    <div class="outpick_container">
+        {{#each intheroes}}
+            <figure>
+                <a href="outpicker/{{this.id}}">
+                    <img src="http://cdn.dota2.com/apps/dota2/images/heroes/{{this.cdn_name}}_full.png"/>
+                </a>
+                <figcaption>{{getHeroesName this.id}}</figcaption>
+            </figure>
+
+        {{/each}}
+    </div>
+</template>

@@ -1,0 +1,28 @@
+<template name="outpicker_hero">
+    <div class="container">
+        <div class="row">
+            <h2 style="text-align: center;">Counterpicking
+                <figure class="mainhero">
+                    <img src="http://cdn.dota2.com/apps/dota2/images/heroes/{{getHeroesName heroname}}_lg.png"
+                         alt="{{getHeroesName heroname}}">
+                    <figcaption>{{getHeroesName heroname}}</figcaption>
+                </figure>
+            </h2>
+            <div class="col-xs-12">
+                <div class="counter_container">
+                    {{#each counterpicks}}
+                        <figure>
+<!--                        <a href="/outpicker/{{counter}}">-->
+                            <img src="http://cdn.dota2.com/apps/dota2/images/heroes/{{getHeroesName counter}}_lg.png"
+                                 alt="{{getHeroesName counterpick}}">
+<!--                        </a>-->
+                            <figcaption class="{{highlightNorm normCount}}">{{normCount}}</figcaption>
+<!--                        <figcaption>Count:{{count}} / {{getPickRate counter}}</figcaption>-->
+                        </figure>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</template>

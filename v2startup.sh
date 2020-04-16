@@ -1,1 +1,1 @@
- meteor --allow-incompatible-update
+ meteor --allow-incompatible-update --settings settings.json

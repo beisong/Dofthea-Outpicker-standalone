@@ -1,0 +1,64 @@
+
+.outpick_container {
+    display: grid;
+    grid-gap: 5px;
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    grid-template-rows: minmax(90px) repeat(auto-fill, 200px) 20%;
+}
+
+.counter_container {
+    display: grid;
+    grid-gap: 5px;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-rows: minmax(150px) repeat(auto-fill, 200px) 20%;
+}
+
+.outpick_container > figure > a > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.counter_container > figure  > img {
+    width: 100%;
+    object-fit: cover;
+}
+
+figcaption {
+    font-size: 1.5em;
+}
+
+.jumbotron {
+    background-color: inherit;
+}
+
+
+@media only screen and (max-width: 480px) {
+    .jumbotron{
+        margin:0;
+    }
+    .jumbotron p{
+        line-height: 110%;
+    }
+
+    figcaption{
+        font-size: 3.5vw !important;
+    }
+
+    .mainhero > img{
+        width: 45vw;
+    }
+    .outpick_container {
+        display: grid;
+        grid-gap: 5px;
+        grid-template-columns: repeat(auto-fit, minmax(75px, 1fr));
+        grid-template-rows: minmax(75px) repeat(auto-fill) 20%;
+    }
+
+    .counter_container {
+        display: grid;
+        grid-gap: 5px;
+        grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+        grid-template-rows: minmax(90px) repeat(auto-fill) 20%;
+    }
+}
