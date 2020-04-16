@@ -5,26 +5,8 @@ Template.outpicker_hero.onCreated(function () {
     Meteor.call("getCounterpick", Router.current().params.heroid, function (error, result) {
         console.log(result);
         if (result) {
-            let newarr = [];
-
-            result.forEach(function (oneCP) {
-                oneCP.normCount = (parseFloat(oneCP.count) * 100 / localStorage.getItem('pickRate_' + oneCP.counter)).toFixed(2);
-                oneCP.pickRate = localStorage.getItem('pickRate_' + oneCP.counter);
-                newarr.push(oneCP)
-            });
-
-            newarr = newarr.sort(compareNormVal);
-
-            let Cur_outpicker_highest = newarr[0].normCount;
-            console.log(Cur_outpicker_highest);
-            Session.set("Cur_outpicker_highest",Cur_outpicker_highest);
-
-            newarr.forEach(function (oneCP) {
-                oneCP.normCount = (oneCP.normCount/Cur_outpicker_highest *10).toFixed(2);
-
-            });
-
-            Session.set('counterpicks', newarr);
+            Session.set("Cur_outpicker_highest",result[0].count);
+            Session.set('counterpicks', result);
         }
         else {
             console.log("On Create : getCounterpick: nothing found ")
@@ -76,10 +58,10 @@ function compareNormVal(a, b) {
 Template.registerHelper('highlightNorm', function(val) {
     var Cur_outpicker_highest = parseFloat(Session.get("Cur_outpicker_highest"));
 
-    if(val > 5){
+    if(val > 0.7*Cur_outpicker_highest){
         return "fontGreen"
     }
-    if(val > 2.5){
+    if(val > 0.4*Cur_outpicker_highest){
         return "fontOrange"
     }
     return "fontBlue"

@@ -11,11 +11,3 @@ Template.registerHelper('getHeroesName', function (heroid) {
 
     }
 });
-
-Template.registerHelper('getPickRate', function (heroid) {
-    if (heroid) {
-        let pickRate = localStorage.getItem('pickRate_' + heroid);
-        // console.log(pickRate);
-        return pickRate;
-    }
-});
