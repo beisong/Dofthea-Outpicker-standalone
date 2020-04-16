@@ -1,0 +1,1 @@
+ meteor --allow-incompatible-update
