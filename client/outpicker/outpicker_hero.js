@@ -1,18 +1,18 @@
 // Meteor.subscribe('fantasy_data');
 
 
-Template.outpicker_hero.onCreated(function () {
-    Meteor.call("getCounterpick", Router.current().params.heroid, function (error, result) {
-        console.log(result);
-        if (result) {
-            Session.set("Cur_outpicker_highest",result[0].count);
-            Session.set('counterpicks', result);
-        }
-        else {
-            console.log("On Create : getCounterpick: nothing found ")
-        }
+Template.outpicker_hero.onRendered(function () {
+    this.autorun(function() {
+        Meteor.call("getCounterpick", Router.current().params.heroid, function (error, result) {
+            if (result) {
+                Session.set("Cur_outpicker_highest",result[0].count);
+                Session.set('counterpicks', result);
+            }
+            else {
+                console.log("On Create : getCounterpick: nothing found ")
+            }
+        });
     });
-    
 });
 
 Template.outpicker_hero.helpers({
@@ -42,6 +42,9 @@ Template.outpicker_hero.helpers({
 });
 
 Template.outpicker_hero.events({
+    'click figure': function (event) {
+        Router.go('outpicker_hero', {heroid: this.counter});
+    },
 });
 
 function compareNormVal(a, b) {
