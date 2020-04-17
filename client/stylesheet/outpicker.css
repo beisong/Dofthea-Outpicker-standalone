@@ -24,6 +24,10 @@
     object-fit: cover;
 }
 
+.counter_container > figure  {
+    cursor: pointer;
+}
+
 figcaption {
     font-size: 1.5em;
 }

@@ -12,11 +12,9 @@
                 <div class="counter_container">
                     {{#each counterpicks}}
                         <figure>
-<!--                        <a href="/outpicker/{{counter}}">-->
                             <img src="http://cdn.dota2.com/apps/dota2/images/heroes/{{getHeroesName counter}}_lg.png"
                                  alt="{{getHeroesName counterpick}}">
-<!--                        </a>-->
-                            <figcaption class="{{highlightNorm count}}">{{count}}</figcaption>
+                            <figcaption class="{{highlightNorm normCount}}">{{counter}} ) {{normCount}} | {{count}}</figcaption>
                         </figure>
                     {{/each}}
                 </div>

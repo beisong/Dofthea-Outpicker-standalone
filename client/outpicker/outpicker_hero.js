@@ -5,14 +5,27 @@ Template.outpicker_hero.onRendered(function () {
     this.autorun(function() {
         Meteor.call("getCounterpick", Router.current().params.heroid, function (error, result) {
             if (result) {
-                Session.set("Cur_outpicker_highest",result[0].count);
-                Session.set('counterpicks', result);
+                let newarr = [];
+                const ave_pickrate = +localStorage.getItem('average_picked');
+                result.forEach(function (oneCP) {
+                    let thispickrate = +(localStorage.getItem('pickRate_' + oneCP.counter));
+                    // thispickrate =((thispickrate - ave_pickrate) / 2 ) + ave_pickrate;
+
+                    let common_ratio = thispickrate /ave_pickrate;
+                    // let common_ratio = (Math.sqrt(localStorage.getItem('pickRate_' + oneCP.counter))/Math.sqrt(ave_pickrate));
+                    oneCP.normCount = (oneCP.count/common_ratio).toFixed(0);
+                    oneCP.pickRate = localStorage.getItem('pickRate_' + oneCP.counter);
+                    newarr.push(oneCP);
+                });
+
+                newarr = newarr.sort(compareNormVal);
+                Session.set('counterpicks', newarr);
             }
             else {
                 console.log("On Create : getCounterpick: nothing found ")
             }
         });
-    });
+    })
 });
 
 Template.outpicker_hero.helpers({
