@@ -13,7 +13,7 @@ Template.outpicker_hero.onRendered(function () {
 
                     let common_ratio = thispickrate /ave_pickrate;
                     // let common_ratio = (Math.sqrt(localStorage.getItem('pickRate_' + oneCP.counter))/Math.sqrt(ave_pickrate));
-                    oneCP.normCount = (oneCP.count/common_ratio).toFixed(0);
+                    oneCP.normCount = (oneCP.count/common_ratio).toFixed(2);
                     oneCP.pickRate = localStorage.getItem('pickRate_' + oneCP.counter);
                     newarr.push(oneCP);
                 });

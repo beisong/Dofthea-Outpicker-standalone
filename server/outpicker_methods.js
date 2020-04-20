@@ -63,47 +63,171 @@ Meteor.methods({
 
     insertMatchBP2: function (matchid) {
         this.unblock();
-        
+
         var results = HTTP.call("GET", "https://api.opendota.com/api/matches/" + matchid);
         var matchdata = results.data;
 
         if (matchdata.picks_bans) {          // Some matches picks_ban is null
             var bp_arr = matchdata.picks_bans;
-            for (var i = 0; i < bp_arr.length; i++) {    //Loop thru BP
-                if (bp_arr[i].is_pick) {                 //if is pick
-                    var thisteam = bp_arr[i].team;
 
-                    if(bp_arr[i].order > second_phase_ban_end){                     // if last 3 pick
-                        for (var k = i-1; k >= second_phase_ban_start; k--) {       // if heroes ban before picking -> is counter
-                            if(!bp_arr[k].is_pick){
-                                BanPick.update(
-                                  {hero: bp_arr[i].hero_id, counter: bp_arr[k].hero_id},
-                                  {'$inc': {"count": 1}}
-                                );
-                            }
-                        }
-                    }
+            let B1= [], P1= [], B2= [], P2= [], B3= [], P3 = [];    // Referring to Ban and pick phase 1,2,3
 
-                    for (var j = i + 1; j < bp_arr.length; j++) {
-                        if (bp_arr[j].team == thisteam) {   // if same team, check ban
-                            if (!bp_arr[j].is_pick) {
-                                BanPick.update(
-                                  {hero: bp_arr[i].hero_id, counter: bp_arr[j].hero_id},
-                                  {'$inc': {"count": 1}}
-                                );
-                            }
-                        }
-                        else {                              // if diff team, check pick: add to counter
-                            if (bp_arr[j].is_pick) {
-                                BanPick.update(
-                                  {hero: bp_arr[i].hero_id, counter: bp_arr[j].hero_id},
-                                  {'$inc': {"count": 1}}
-                                );
-                            }
-                        }
+            let h = 0;
+            while (!bp_arr[h].is_pick){
+                B1.push(bp_arr[h]);
+                h++;
+            }
+            while (bp_arr[h].is_pick){
+                P1.push(bp_arr[h]);
+                h++;
+            }
+            while (!bp_arr[h].is_pick){
+                B2.push(bp_arr[h]);
+                h++;
+            }
+            while (bp_arr[h].is_pick){
+                P2.push(bp_arr[h]);
+                h++;
+            }
+            while (!bp_arr[h].is_pick){
+                B3.push(bp_arr[h]);
+                h++;
+            }
+            while (bp_arr[h] && bp_arr[h].is_pick){
+                P3.push(bp_arr[h]);
+                h++;
+            }
+
+            // P1
+            for (let i = P1.length-1; i > 0; i--) {
+                for (let j = i-1; j >= 0; j--) {
+                    if(P1[i].team !== P1[j].team){
+                        updateBP(P1[j].hero_id, P1[i].hero_id);
+                       // console.log("PICK1) "  + P1[i].hero_id + " Counters " +P1[j].hero_id);
                     }
                 }
             }
+
+            // B2
+            for (let i = 0; i<B2.length; i++) {
+                for(let j = 0; j<P1.length; j++){
+                    if(B2[i].team === P1[j].team){
+                        updateBP(P1[j].hero_id, B2[i].hero_id);
+                        // console.log("BAN2) "  + B2[i].hero_id + " Counters " +P1[j].hero_id);
+                    }
+                }
+            }
+
+            //P2
+            for (let i = P2.length-1; i >= 0; i--) {
+                if(i>0){
+                    for (let j = i-1; j >= 0; j--) {
+                        if(P2[i].team !== P2[j].team){
+                            updateBP(P2[j].hero_id, P2[i].hero_id );
+                            // console.log("PICK2) "  + P2[i].hero_id + " Counters " +P2[j].hero_id);
+                        }
+                    }
+                }
+                for (let k = 0; k <P1.length; k++) {
+                    if(P2[i].team !== P1[k].team){
+                        updateBP(P1[k].hero_id, P2[i].hero_id );
+                        // console.log("PICK2) "  + P2[i].hero_id + " Counters " +P1[k].hero_id);
+                    }
+                }
+                for (let l = 0; l <B2.length; l++) {
+                    if(P2[i].team === B2[l].team){
+                        updateBP(P2[i].hero_id, B2[l].hero_id);
+                        // console.log("PICK3) "  + B2[l].hero_id + " Counters " +P2[i].hero_id);
+                    }
+                }
+
+            }
+
+            // B3
+            for (let i = 0; i<B3.length; i++) {
+                for(let j = 0; j<P1.length; j++){
+                    if(B3[i].team === P1[j].team){
+                        updateBP(P1[j].hero_id, B3[i].hero_id );
+                        // console.log("BAN3) "  + B3[i].hero_id + " Counters " +P1[j].hero_id);
+                    }
+                }
+                for(let j = 0; j<P2.length; j++){
+                    if(B3[i].team === P2[j].team){
+                        updateBP(P2[j].hero_id, B3[i].hero_id );
+                        // console.log("BAN3) "  + B3[i].hero_id + " Counters " +P2[j].hero_id);
+                    }
+                }
+            }
+
+
+            //P3
+            for (let i = P3.length-1; i >= 0; i--) {
+                if(i>0){
+                    for (let j = i-1; j >= 0; j--) {
+                        if(P3[i].team !== P3[j].team){
+                            updateBP(P3[j].hero_id, P3[i].hero_id );
+                            // console.log("PICK3) "  + P3[i].hero_id + " Counters " +P3[j].hero_id);
+                        }
+                    }
+                }
+                for (let k = 0; k <P1.length; k++) {
+                    if(P3[i].team !== P1[k].team){
+                        updateBP(P1[k].hero_id, P3[i].hero_id );
+                        // console.log("PICK3) "  + P3[i].hero_id + " Counters " +P1[k].hero_id);
+                    }
+                }
+                for (let l = 0; l <P2.length; l++) {
+                    if(P3[i].team !== P2[l].team){
+                        updateBP(P2[l].hero_id, P3[i].hero_id);
+                        // console.log("PICK3) "  + P3[i].hero_id + " Counters " +P2[l].hero_id);
+                    }
+                }
+                for (let m = 0; m <B3.length; m++) {
+                    if(P3[i].team === B3[m].team){
+                        updateBP(P3[i].hero_id, B3[m].hero_id );
+                        // console.log("PICK3) "  + B3[m].hero_id + " Counters " +P3[i].hero_id);
+                    }
+                }
+            }
+
+
+
+            // OLD CODE
+            // for (var i = 0; i < bp_arr.length; i++) {    //Loop thru BP
+            //     if (bp_arr[i].is_pick) {                 //if is pick
+            //         var thisteam = bp_arr[i].team;
+            //
+            //         if(bp_arr[i].order > second_phase_ban_end){                     // if last 3 pick
+            //             for (var k = i-1; k >= second_phase_ban_start; k--) {       // if heroes ban before picking -> is counter
+            //                 if(!bp_arr[k].is_pick){
+            //                     BanPick.update(
+            //                       {hero: bp_arr[i].hero_id, counter: bp_arr[k].hero_id},
+            //                       {'$inc': {"count": 1}}
+            //                     );
+            //                 }
+            //             }
+            //         }
+            //
+            //         for (var j = i + 1; j < bp_arr.length; j++) {
+            //             if (bp_arr[j].team == thisteam) {   // if same team, check ban
+            //                 if (!bp_arr[j].is_pick) {
+            //                     BanPick.update(
+            //                       {hero: bp_arr[i].hero_id, counter: bp_arr[j].hero_id},
+            //                       {'$inc': {"count": 1}}
+            //                     );
+            //                 }
+            //             }
+            //             else {                              // if diff team, check pick: add to counter
+            //                 if (bp_arr[j].is_pick) {
+            //                     BanPick.update(
+            //                       {hero: bp_arr[i].hero_id, counter: bp_arr[j].hero_id},
+            //                       {'$inc': {"count": 1}}
+            //                     );
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
         }
         console.log("Parsed BP: " + matchid);
     },
@@ -220,7 +344,6 @@ Meteor.methods({
         return res;
     },
     getCounterpick: function (heroid) {
-        console.log(heroid);
         var pipeline2 = [
             {
                 $match: {hero: +heroid}
@@ -231,7 +354,6 @@ Meteor.methods({
             {$limit: 32}
         ];
         const results = Promise.await(BanPick.aggregate(pipeline2).toArray());
-        console.log(results);
         return results;
     },
     getPickcount: function (heroid) {
@@ -295,4 +417,12 @@ sleep = function (milliseconds) {
             break;
         }
     }
+}
+
+
+updateBP = function(hero, counteredby){
+    BanPick.update(
+      {hero: hero, counter: counteredby},
+      {'$inc': {"count": 1}}
+    );
 }
