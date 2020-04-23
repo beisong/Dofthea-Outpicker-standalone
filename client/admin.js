@@ -23,11 +23,7 @@ Template.admin.events({
         });
     },
     'click #testbut': function (event) {
-        Meteor.call("getTI9Teams", function (error, results) {
-            if (error) {
-                console.log(error);
-            }
-            console.log(results);
+        Meteor.call("testfn", 5367609492, function (error, results) {
         });
     },
     'click #parsematchbp2': function (event) {

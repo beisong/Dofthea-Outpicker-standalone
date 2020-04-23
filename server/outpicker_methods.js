@@ -61,6 +61,8 @@ Meteor.methods({
         console.log("BP Init");
     },
 
+    testfn: function (matchid) {
+    },
     insertMatchBP2: function (matchid) {
         this.unblock();
 
