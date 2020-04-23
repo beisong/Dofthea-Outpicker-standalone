@@ -231,7 +231,7 @@ Meteor.methods({
             //     }
             // }
         }
-        console.log("Parsed BP: " + matchid);
+        // console.log("Parsed BP: " + matchid);
     },
     insertLeagueBP2: function (leaguestring) {
         console.log(leaguestring);
