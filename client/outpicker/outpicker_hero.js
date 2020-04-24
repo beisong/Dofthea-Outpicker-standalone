@@ -29,7 +29,7 @@ Template.outpicker_hero.onRendered(function () {
 });
 
 Template.outpicker_hero.helpers({
-    heroname: function () {
+    heroid: function () {
         return Router.current().params.heroid;
     },
     bans: function () {
