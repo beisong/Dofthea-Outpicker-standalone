@@ -2,6 +2,10 @@
 
 
 Template.outpicker.onRendered(function () {
+    var input = this.find('#the-filter');
+    if(input){
+        input.focus()
+    }
 });
 
 Template.outpicker.helpers({
