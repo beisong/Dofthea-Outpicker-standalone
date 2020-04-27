@@ -2,6 +2,7 @@
 
 
 Template.outpicker.onRendered(function () {
+    //TODO UNABLE TO CLICK AFTER SCROLL
     var input = this.find('#the-filter');
     if(input){
         input.focus()
@@ -20,6 +21,7 @@ Template.outpicker.helpers({
     intheroes: function () {
         var heroesinfo = Heroes.find({primary_attr: 'int'}, {sort: {localized_name: 1}}).fetch();
         return heroesinfo;
+
     }
 });
 
