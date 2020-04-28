@@ -31,13 +31,17 @@ Meteor.methods({
             "https://api.opendota.com/api/heroes");
 
         heroesdata = result.data;
+
+        Heroes.rawCollection().drop();
+
         for (var i = 0; i < heroesdata.length; i++) {
 
             var cdn_name = heroesdata[i].name.substring(14);
             heroesdata[i].cdn_name = cdn_name;
 
-            // download("http://cdn.dota2.com/apps/dota2/images/heroes/" + cdn_name + "_full.png", curDIR + "/public/heroesimage/" + cdn_name + ".jpg", cdn_name, function () {
-            // });
+
+            download("http://cdn.dota2.com/apps/dota2/images/heroes/" + cdn_name + "_full.png", curDIR + "/public/heroesimage/" + cdn_name + ".jpg", cdn_name, function () {
+            });
 
             Heroes.insert(
                 heroesdata[i]
