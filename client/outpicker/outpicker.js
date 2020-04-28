@@ -11,17 +11,14 @@ Template.outpicker.onRendered(function () {
 
 Template.outpicker.helpers({
     strheroes: function () {
-        var heroesinfo = Heroes.find({primary_attr: 'str'}, {sort: {localized_name: 1}}).fetch();
-        return heroesinfo;
+        return Heroes.find({primary_attr: 'str'}, {sort: {localized_name: 1}}).fetch();
+
     },
     agiheroes: function () {
-        var heroesinfo = Heroes.find({primary_attr: 'agi'}, {sort: {localized_name: 1}}).fetch();
-        return heroesinfo;
+        return heroesinfo = Heroes.find({primary_attr: 'agi'}, {sort: {localized_name: 1}}).fetch();
     },
     intheroes: function () {
-        var heroesinfo = Heroes.find({primary_attr: 'int'}, {sort: {localized_name: 1}}).fetch();
-        return heroesinfo;
-
+        return heroesinfo = Heroes.find({primary_attr: 'int'}, {sort: {localized_name: 1}}).fetch();
     }
 });
 

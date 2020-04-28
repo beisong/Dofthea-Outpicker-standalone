@@ -5,8 +5,6 @@ Template.registerHelper('getHeroesName', function (heroid) {
     if (heroid) {
         var res = Heroes.findOne({id: +heroid});
         if (res) {
-            console.log("localized_name");
-            console.log(res.localized_name);
             return res.localized_name;
         }
     }
