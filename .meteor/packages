@@ -28,4 +28,5 @@ twbs:bootstrap
 http@1.4.0
 meteorhacks:aggregate
 simple:reactive-method
-okgrow:analytics
+#okgrow:analytics  #causing iron router no router definition
+reywood:iron-router-ga

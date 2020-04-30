@@ -1,6 +1,11 @@
 import {Meteor} from "meteor/meteor";
 
 Meteor.startup(() => {
+
+  if (Meteor.isClient) {
+    Router.plugin('reywood:iron-router-ga');
+  }
+
   Meteor.call("getPickedRate", function (error, results) {
     if (error) {
       console.log(error);
